@@ -9,15 +9,13 @@
 <meta name="apple-mobile-web-app-title" content="Dashboard">
 <meta name="theme-color" content="#1a1917">
 <title>My Dashboard</title>
-<link rel="manifest" href="manifest.json">
-<link rel="apple-touch-icon" href="icon.svg">
 <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   :root {
     --bg: #f5f4f0; --surface: #ffffff; --surface2: #eeede9;
     --border: #e0deda; --text: #1a1917; --muted: #7a786f;
-    --accent-soft: #e8e7e3; --done: #b5b3ac;
+    --accent-soft: #e8e7e3;
     --safe-top: env(safe-area-inset-top, 0px);
     --safe-bottom: env(safe-area-inset-bottom, 0px);
     --radius: 14px; --mono: 'DM Mono', monospace; --sans: 'DM Sans', sans-serif;
@@ -25,32 +23,20 @@
 
   html, body { height: 100%; }
   body {
-    font-family: var(--sans);
-    background: var(--bg);
-    color: var(--text);
-    overflow-x: hidden;
-    /* スマホのノッチ・ホームバー対応 */
-    padding-top: var(--safe-top);
-    padding-bottom: calc(64px + var(--safe-bottom));
+    font-family: var(--sans); background: var(--bg); color: var(--text);
+    overflow-x: hidden; padding-top: var(--safe-top); padding-bottom: calc(64px + var(--safe-bottom));
   }
 
-  /* ── Bottom Nav（スマホ用） ── */
+  /* ── Bottom Nav ── */
   .bottom-nav {
-    position: fixed;
-    bottom: 0; left: 0; right: 0;
-    height: calc(56px + var(--safe-bottom));
-    padding-bottom: var(--safe-bottom);
-    background: var(--surface);
-    border-top: 1px solid var(--border);
-    display: flex;
-    z-index: 100;
+    position: fixed; bottom: 0; left: 0; right: 0; height: calc(56px + var(--safe-bottom));
+    padding-bottom: var(--safe-bottom); background: var(--surface); border-top: 1px solid var(--border);
+    display: flex; z-index: 100;
   }
   .nav-btn {
-    flex: 1; display: flex; flex-direction: column;
-    align-items: center; justify-content: center;
-    gap: 3px; cursor: pointer; border: none; background: none;
-    color: var(--muted); font-family: var(--mono); font-size: 9px;
-    letter-spacing: 0.05em; text-transform: uppercase;
+    flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center;
+    gap: 3px; cursor: pointer; border: none; background: none; color: var(--muted);
+    font-family: var(--mono); font-size: 9px; letter-spacing: 0.05em; text-transform: uppercase;
     transition: color .15s; padding-bottom: 2px;
   }
   .nav-btn.active { color: var(--text); }
@@ -61,20 +47,6 @@
   .page.active { display: block; }
   @keyframes fadeUp { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:translateY(0)} }
 
-  /* ── Install banner ── */
-  .install-banner {
-    background: var(--text); color: var(--bg);
-    border-radius: var(--radius); padding: 14px 16px;
-    margin-bottom: 16px; display: flex;
-    align-items: center; gap: 12px;
-    animation: fadeUp .3s ease;
-  }
-  .install-banner.hidden { display: none; }
-  .install-text { flex: 1; font-size: 13px; line-height: 1.5; }
-  .install-text strong { font-size: 13px; font-weight: 500; display: block; margin-bottom: 2px; }
-  .install-btn { font-family: var(--mono); font-size: 11px; background: var(--bg); color: var(--text); border: none; border-radius: 8px; padding: 8px 12px; cursor: pointer; white-space: nowrap; }
-  .install-close { background: none; border: none; color: rgba(255,255,255,.5); font-size: 18px; cursor: pointer; line-height: 1; padding: 4px; }
-
   /* ── Page header ── */
   .page-header { margin-bottom: 20px; }
   .page-greeting { font-family: var(--mono); font-size: 10px; color: var(--muted); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 2px; }
@@ -83,94 +55,24 @@
 
   /* ── Cards ── */
   .card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 18px; margin-bottom: 12px; }
-  .card-label { font-family: var(--mono); font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); margin-bottom: 14px; display: flex; justify-content: space-between; align-items: center; }
-  .sync-status { display: flex; align-items: center; gap: 5px; font-size: 10px; }
-  .sync-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--muted); }
-  .sync-dot.ok { background: #27ae60; }
-  .sync-dot.ing { background: #e67e22; animation: pulse 1s infinite; }
-  .sync-dot.err { background: #c0392b; }
-  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.4} }
+  .card-label { font-family: var(--mono); font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); margin-bottom: 14px; }
 
-  /* ── Setup ── */
-  .setup-desc { font-size: 13px; color: var(--muted); margin-bottom: 16px; line-height: 1.7; }
-  .token-input { width: 100%; font-family: var(--mono); font-size: 13px; background: var(--surface2); border: 1px solid var(--border); border-radius: 10px; padding: 12px 14px; color: var(--text); outline: none; margin-bottom: 10px; }
-  .token-input:focus { border-color: var(--text); }
-  .token-input::placeholder { color: var(--muted); }
-  .btn-row { display: flex; gap: 8px; }
-
-  /* ── Shared inputs ── */
-  .add-row { display: flex; gap: 8px; margin-top: 12px; }
-  .add-input { flex: 1; font-family: var(--sans); font-size: 14px; background: var(--surface2); border: 1px solid var(--border); border-radius: 10px; padding: 11px 14px; color: var(--text); outline: none; }
-  .add-input:focus { border-color: var(--text); }
-  .add-input::placeholder { color: var(--muted); }
-  .add-time { font-family: var(--mono); font-size: 13px; background: var(--surface2); border: 1px solid var(--border); border-radius: 10px; padding: 11px 10px; color: var(--text); outline: none; width: 88px; }
-  .btn { font-family: var(--mono); font-size: 12px; background: var(--text); color: var(--bg); border: none; border-radius: 10px; padding: 11px 16px; cursor: pointer; white-space: nowrap; -webkit-tap-highlight-color: transparent; }
-  .btn:active { opacity: .7; }
-  .btn.sec { background: var(--surface2); color: var(--text); border: 1px solid var(--border); }
-
-  /* ── Schedule ── */
-  .schedule-item { display: flex; align-items: center; gap: 10px; padding: 13px 8px; border-bottom: 1px solid var(--border); }
-  .schedule-item:last-child { border-bottom: none; }
-  .s-time { font-family: var(--mono); font-size: 12px; color: var(--muted); min-width: 46px; }
-  .s-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--text); flex-shrink: 0; }
-  .s-dot.soon { background: #c0392b; }
-  .s-title { font-size: 14px; flex: 1; }
-  .s-tag { font-family: var(--mono); font-size: 10px; background: var(--accent-soft); color: var(--muted); padding: 3px 8px; border-radius: 20px; }
-  .del-btn { font-size: 18px; color: var(--border); cursor: pointer; background: none; border: none; padding: 4px 6px; line-height: 1; -webkit-tap-highlight-color: transparent; }
-
-  /* ── Todo ── */
-  .progress-row { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; }
-  .progress-bar { flex: 1; height: 3px; background: var(--border); border-radius: 99px; overflow: hidden; }
-  .progress-fill { height: 100%; background: var(--text); border-radius: 99px; transition: width .4s ease; }
-  .progress-label { font-family: var(--mono); font-size: 10px; color: var(--muted); }
-  .todo-item { display: flex; align-items: center; gap: 12px; padding: 13px 8px; border-bottom: 1px solid var(--border); cursor: pointer; -webkit-tap-highlight-color: transparent; }
-  .todo-item:last-child { border-bottom: none; }
-  .todo-item:active { background: var(--surface2); border-radius: 8px; }
-  .todo-check { width: 20px; height: 20px; border: 1.5px solid var(--border); border-radius: 5px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; transition: all .15s; }
-  .todo-item.done .todo-check { background: var(--text); border-color: var(--text); }
-  .todo-item.done .todo-check::after { content:''; width:10px; height:6px; border-left:2px solid white; border-bottom:2px solid white; transform:rotate(-45deg) translateY(-1px); display:block; }
-  .todo-text { font-size: 14px; flex: 1; transition: color .15s; }
-  .todo-item.done .todo-text { color: var(--done); text-decoration: line-through; }
-
-  /* ── News ── */
-  .news-filter { display: flex; gap: 8px; margin-bottom: 14px; flex-wrap: wrap; }
-  .news-filter-btn { font-family: var(--mono); font-size: 10px; letter-spacing: 0.06em; padding: 5px 12px; border-radius: 20px; border: 1px solid var(--border); background: var(--surface2); color: var(--muted); cursor: pointer; transition: all .15s; -webkit-tap-highlight-color: transparent; }
+  /* ── News UI ── */
+  .news-filter { display: flex; gap: 6px; margin-bottom: 14px; flex-wrap: wrap; }
+  .news-filter-btn { font-family: var(--mono); font-size: 9px; letter-spacing: 0.04em; padding: 6px 10px; border-radius: 20px; border: 1px solid var(--border); background: var(--surface2); color: var(--muted); cursor: pointer; transition: all .15s; text-transform: uppercase; }
   .news-filter-btn.active { background: var(--text); color: var(--bg); border-color: var(--text); }
-  .news-item { background: var(--surface2); border-radius: 10px; padding: 16px; margin-bottom: 10px; text-decoration: none; color: inherit; display: flex; gap: 12px; align-items: flex-start; -webkit-tap-highlight-color: transparent; border: 1px solid transparent; transition: border-color .15s; }
+  .news-item { background: var(--surface2); border-radius: 10px; padding: 16px; margin-bottom: 10px; text-decoration: none; color: inherit; display: flex; gap: 12px; align-items: flex-start; border: 1px solid transparent; transition: border-color .15s; }
   .news-item:active { opacity: .7; }
-  .news-item:hover { border-color: var(--border); }
   .news-item-body { flex: 1; min-width: 0; }
-  .news-meta { font-family: var(--mono); font-size: 10px; color: var(--muted); margin-bottom: 5px; display: flex; gap: 8px; align-items: center; }
-  .news-tag { font-family: var(--mono); font-size: 9px; background: var(--accent-soft); color: var(--muted); padding: 2px 7px; border-radius: 20px; }
-  .news-title { font-size: 14px; font-weight: 500; line-height: 1.55; }
-  .news-source { font-family: var(--mono); font-size: 10px; color: var(--muted); margin-top: 8px; }
-  .news-thumb { width: 64px; height: 64px; border-radius: 8px; background: var(--border); flex-shrink: 0; object-fit: cover; }
-  .news-thumb-placeholder { width: 64px; height: 64px; border-radius: 8px; background: var(--accent-soft); flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 22px; }
-  .news-msg { font-family: var(--mono); font-size: 12px; color: var(--muted); padding: 24px 0; text-align: center; }
+  .news-meta { font-family: var(--mono); font-size: 9px; color: var(--muted); margin-bottom: 5px; display: flex; gap: 8px; align-items: center; }
+  .news-tag { font-family: var(--mono); font-size: 8px; background: var(--accent-soft); color: var(--muted); padding: 2px 6px; border-radius: 20px; font-weight: 500; }
+  .news-title { font-size: 14px; font-weight: 500; line-height: 1.5; }
+  .news-thumb-placeholder { width: 48px; height: 48px; border-radius: 8px; background: var(--accent-soft); flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 18px; }
   .news-reload { font-family: var(--mono); font-size: 10px; background: none; border: 1px solid var(--border); border-radius: 8px; padding: 5px 12px; color: var(--muted); cursor: pointer; margin-left: auto; display: block; margin-bottom: 12px; }
-
-  /* ── Settings ── */
-  .setting-row { display: flex; justify-content: space-between; align-items: center; padding: 14px 0; border-bottom: 1px solid var(--border); }
-  .setting-row:last-child { border-bottom: none; }
-  .setting-label { font-size: 14px; }
-  .setting-sub { font-family: var(--mono); font-size: 11px; color: var(--muted); margin-top: 2px; }
-  .setting-val { font-family: var(--mono); font-size: 12px; color: var(--muted); }
-  .danger-btn { font-family: var(--mono); font-size: 11px; color: #c0392b; background: none; border: 1px solid #c0392b; border-radius: 8px; padding: 7px 12px; cursor: pointer; }
 </style>
 </head>
 <body>
 
-<!-- Install Banner -->
-<div class="install-banner hidden" id="installBanner">
-  <div class="install-text">
-    <strong>ホーム画面に追加</strong>
-    アプリとして使えます
-  </div>
-  <button class="install-btn" id="installBtn">追加する</button>
-  <button class="install-close" onclick="document.getElementById('installBanner').classList.add('hidden')">×</button>
-</div>
-
-<!-- ── Page: Home ── -->
 <div class="page active" id="page-home">
   <div class="page-header">
     <div class="page-greeting" id="greeting"></div>
@@ -179,483 +81,175 @@
       <div class="page-clock" id="clock">--:--</div>
     </div>
   </div>
-
-  <!-- Today's schedule preview -->
   <div class="card">
-    <div class="card-label">
-      今日の予定
-      <span class="sync-status"><span class="sync-dot" id="sd-s"></span><span id="sl-s"></span></span>
-    </div>
-    <div id="homeSchedule"></div>
-  </div>
-
-  <!-- Todo summary -->
-  <div class="card">
-    <div class="card-label">
-      To Do
-      <span class="sync-status"><span class="sync-dot" id="sd-t"></span><span id="sl-t"></span></span>
-    </div>
-    <div class="progress-row">
-      <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
-      <div class="progress-label" id="progressLabel">0 / 0</div>
-    </div>
-    <div id="homeTodo"></div>
+    <div class="card-label">Next Tasks</div>
+    <div id="homeTodo" style="font-size: 13px; color: var(--muted);">タスク機能は準備中です...</div>
   </div>
 </div>
 
-<!-- ── Page: Schedule ── -->
-<div class="page" id="page-schedule">
-  <div class="page-header">
-    <div class="page-greeting">schedule</div>
-    <div class="page-title">スケジュール</div>
-  </div>
-  <div class="card">
-    <div id="scheduleList"></div>
-    <div class="add-row">
-      <input class="add-time" type="time" id="newTime">
-      <input class="add-input" type="text" id="newEvent" placeholder="予定を追加...">
-      <button class="btn" onclick="addSchedule()">+</button>
-    </div>
-  </div>
-</div>
-
-<!-- ── Page: Todo ── -->
-<div class="page" id="page-todo">
-  <div class="page-header">
-    <div class="page-greeting">to do</div>
-    <div class="page-title">タスク</div>
-  </div>
-  <div class="card">
-    <div id="todoList"></div>
-    <div class="add-row">
-      <input class="add-input" type="text" id="newTodo" placeholder="タスクを追加...">
-      <button class="btn" onclick="addTodo()">+</button>
-    </div>
-  </div>
-</div>
-
-<!-- ── Page: News ── -->
 <div class="page" id="page-news">
   <div class="page-header">
-    <div class="page-greeting">tech news</div>
-    <div class="page-title">ニュース</div>
+    <div class="page-greeting">Infra & Dev Updates</div>
+    <div class="page-title">News Feed</div>
   </div>
   <div class="news-filter">
-    <button class="news-filter-btn active" onclick="filterNews('all',this)">すべて</button>
-    <button class="news-filter-btn" onclick="filterNews('gigazine',this)">GIGAZINE</button>
-    <button class="news-filter-btn" onclick="filterNews('nikkei',this)">日経</button>
-    <button class="news-filter-btn" onclick="filterNews('ascii',this)">ASCII</button>
-    <button class="news-filter-btn" onclick="filterNews('itmedia',this)">ITmedia</button>
+    <button class="news-filter-btn active" onclick="filterNews('all',this)">All</button>
+    <button class="news-filter-btn" onclick="filterNews('NW',this)">Network</button>
+    <button class="news-filter-btn" onclick="filterNews('Cloud',this)">Cloud</button>
+    <button class="news-filter-btn" onclick="filterNews('Dev',this)">Dev/IaC</button>
   </div>
-  <button class="news-reload" onclick="fetchNews()">↻ 更新</button>
-  <div id="newsList"><div class="news-msg">読み込み中...</div></div>
+  <button class="news-reload" onclick="fetchNews()">↻ Reload</button>
+  <div id="newsList"><div class="news-msg" style="text-align:center; padding:40px; color:var(--muted); font-family:var(--mono); font-size:12px;">Loading feeds...</div></div>
 </div>
 
-<!-- ── Page: Settings ── -->
 <div class="page" id="page-settings">
   <div class="page-header">
-    <div class="page-greeting">settings</div>
-    <div class="page-title">設定</div>
+    <div class="page-greeting">Preferences</div>
+    <div class="page-title">Settings</div>
   </div>
-
   <div class="card">
-    <div class="card-label">GitHub Gist 同期</div>
-    <div class="setup-desc" id="syncDesc">トークンを設定するとPCとデータが同期されます。</div>
-    <input class="token-input" type="password" id="tokenInput" placeholder="ghp_xxxxxxxxxxxxxxxxxxxx">
-    <div class="btn-row">
-      <button class="btn" onclick="saveToken()">接続する</button>
-      <button class="btn sec" onclick="clearToken()">解除する</button>
-    </div>
-    <div id="tokenMsg" style="font-family:var(--mono);font-size:11px;color:var(--muted);margin-top:10px;min-height:16px;"></div>
-  </div>
-
-  <div class="card">
-    <div class="card-label">AI翻訳設定</div>
-    <div class="setup-desc">Anthropic APIキーを設定すると、英語記事を自動で日本語に翻訳・要約します。<br>キーは <a href="https://console.anthropic.com" target="_blank" style="color:var(--text)">console.anthropic.com</a> で取得できます。</div>
-    <input class="token-input" type="password" id="anthropicKeyInput" placeholder="sk-ant-xxxxxxxxxxxx">
-    <div class="btn-row">
-      <button class="btn" onclick="saveAnthropicKey()">保存する</button>
-      <button class="btn sec" onclick="clearAnthropicKey()">削除する</button>
-    </div>
-    <div id="anthropicKeyMsg" style="font-family:var(--mono);font-size:11px;color:var(--muted);margin-top:10px;min-height:16px;"></div>
-  </div>
-
-  <div class="card">
-    <div class="setting-row">
-      <div><div class="setting-label">バージョン</div></div>
-      <div class="setting-val">1.0.0</div>
-    </div>
-    <div class="setting-row">
-      <div><div class="setting-label">同期先 Gist ID</div><div class="setting-sub" id="gistIdDisplay">未設定</div></div>
-    </div>
-    <div class="setting-row">
-      <div><div class="setting-label">データをリセット</div></div>
-      <button class="danger-btn" onclick="resetData()">リセット</button>
-    </div>
+    <div class="card-label">App Info</div>
+    <div style="font-size: 13px; color: var(--muted);">設定機能は準備中です...</div>
   </div>
 </div>
 
-<!-- ── Bottom Navigation ── -->
 <nav class="bottom-nav">
-  <button class="nav-btn active" onclick="showPage('home',this)">
-    <span class="nav-icon">⌂</span>ホーム
-  </button>
-  <button class="nav-btn" onclick="showPage('schedule',this)">
-    <span class="nav-icon">◷</span>予定
-  </button>
-  <button class="nav-btn" onclick="showPage('todo',this)">
-    <span class="nav-icon">✓</span>タスク
-  </button>
-  <button class="nav-btn" onclick="showPage('news',this)">
-    <span class="nav-icon">◈</span>ニュース
-  </button>
-  <button class="nav-btn" onclick="showPage('settings',this)">
-    <span class="nav-icon">⚙</span>設定
-  </button>
+  <button class="nav-btn active" onclick="showPage('home',this)"><span class="nav-icon">⌂</span>Home</button>
+  <button class="nav-btn" onclick="showPage('news',this)"><span class="nav-icon">◈</span>News</button>
+  <button class="nav-btn" onclick="showPage('settings',this)"><span class="nav-icon">⚙</span>Set</button>
 </nav>
 
 <script>
-// ── Service Worker ──
-if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('./sw.js').catch(()=>{});
-}
-
-// ── PWA Install ──
-let deferredPrompt = null;
-window.addEventListener('beforeinstallprompt', e => {
-  e.preventDefault(); deferredPrompt = e;
-  document.getElementById('installBanner').classList.remove('hidden');
-});
-document.getElementById('installBtn').addEventListener('click', async () => {
-  if (!deferredPrompt) return;
-  deferredPrompt.prompt();
-  const { outcome } = await deferredPrompt.userChoice;
-  deferredPrompt = null;
-  document.getElementById('installBanner').classList.add('hidden');
-});
-
 // ── Navigation ──
 function showPage(id, btn) {
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
   document.getElementById('page-'+id).classList.add('active');
   btn.classList.add('active');
-  if (id === 'news' && document.getElementById('newsList').children.length <= 1) fetchNews();
+  if (id === 'news' && allNews.length === 0) fetchNews();
 }
 
 // ── Clock ──
 function tick() {
   const n = new Date(); const pad = v => String(v).padStart(2,'0');
   document.getElementById('clock').textContent = pad(n.getHours())+':'+pad(n.getMinutes());
-  const days=['日','月','火','水','木','金','土'];
-  document.getElementById('dateStr').textContent = `${n.getMonth()+1}月${n.getDate()}日（${days[n.getDay()]}）`;
-  document.getElementById('greeting').textContent =
-    n.getHours()<12?'good morning':n.getHours()<18?'good afternoon':'good evening';
+  const days=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+  document.getElementById('dateStr').textContent = `${n.getMonth()+1}/${n.getDate()} (${days[n.getDay()]})`;
+  document.getElementById('greeting').textContent = n.getHours()<12?'Good Morning':n.getHours()<18?'Good Afternoon':'Good Evening';
 }
 tick(); setInterval(tick, 1000);
 
-// ── State ──
-let TOKEN   = localStorage.getItem('gh_token') || '';
-let GIST_ID = localStorage.getItem('gist_id')  || '';
-
-const DEF_SCHEDULE = [
-  {time:'09:00',title:'メール確認',tag:'毎日'},
-  {time:'12:00',title:'ランチ',tag:''},
-  {time:'15:00',title:'ミーティング',tag:'仕事'},
-];
-const DEF_TODOS = [
-  {text:'GitHubアカウントを作る',done:true},
-  {text:'GitHub Actionsを試す',done:false},
-  {text:'ダッシュボードをカスタマイズする',done:false},
-];
-
-let schedule = JSON.parse(localStorage.getItem('schedule')||'null') || [...DEF_SCHEDULE];
-let todos    = JSON.parse(localStorage.getItem('todos')||'null')    || [...DEF_TODOS];
-
-// ── Gist ──
-const GH = 'https://api.github.com';
-const ghH = () => ({ Authorization:`token ${TOKEN}`, 'Content-Type':'application/json' });
-
-async function ensureGist() {
-  if (GIST_ID) {
-    const r = await fetch(`${GH}/gists/${GIST_ID}`,{headers:ghH()});
-    if (r.ok) return; GIST_ID=''; localStorage.removeItem('gist_id');
-  }
-  const r = await fetch(`${GH}/gists`,{
-    method:'POST', headers:ghH(),
-    body:JSON.stringify({description:'My Dashboard Data',public:false,
-      files:{'dashboard.json':{content:JSON.stringify({schedule,todos})}}})
-  });
-  if (!r.ok) throw new Error();
-  const d = await r.json(); GIST_ID = d.id; localStorage.setItem('gist_id',GIST_ID);
-}
-async function gistPull() {
-  const r = await fetch(`${GH}/gists/${GIST_ID}`,{headers:ghH()});
-  if (!r.ok) return; const d = await r.json();
-  const c = d.files['dashboard.json']?.content; if (!c) return;
-  const remote = JSON.parse(c);
-  schedule = remote.schedule||schedule; todos = remote.todos||todos;
-  localStorage.setItem('schedule',JSON.stringify(schedule));
-  localStorage.setItem('todos',JSON.stringify(todos));
-}
-async function gistPush() {
-  await fetch(`${GH}/gists/${GIST_ID}`,{method:'PATCH',headers:ghH(),
-    body:JSON.stringify({files:{'dashboard.json':{content:JSON.stringify({schedule,todos})}}})});
-}
-
-function setSyncDot(k,s) {
-  const dot=document.getElementById(`sd-${k}`); const lbl=document.getElementById(`sl-${k}`);
-  if(!dot)return;
-  dot.className='sync-dot'+(s!=='off'?' '+s:'');
-  lbl.textContent={ok:'同期済',ing:'同期中',err:'エラー',off:''}[s]||'';
-}
-
-async function persist() {
-  localStorage.setItem('schedule',JSON.stringify(schedule));
-  localStorage.setItem('todos',JSON.stringify(todos));
-  if (!TOKEN||!GIST_ID) return;
-  setSyncDot('s','ing'); setSyncDot('t','ing');
-  try { await gistPush(); setSyncDot('s','ok'); setSyncDot('t','ok'); }
-  catch { setSyncDot('s','err'); setSyncDot('t','err'); }
-}
-
-// ── Render ──
-function renderAll() { renderHome(); renderSchedule(); renderTodos(); updateSettingsUI(); }
-
-function renderHome() {
-  const now=new Date(); const nowMin=now.getHours()*60+now.getMinutes();
-  const sorted=[...schedule].sort((a,b)=>a.time.localeCompare(b.time));
-  const upcoming=sorted.filter(s=>{const[h,m]=s.time.split(':').map(Number);return h*60+m>=nowMin;}).slice(0,3);
-  document.getElementById('homeSchedule').innerHTML = upcoming.length
-    ? upcoming.map(s=>`<div class="schedule-item">
-        <span class="s-time">${s.time}</span>
-        <span class="s-dot"></span>
-        <span class="s-title">${s.title}</span>
-        ${s.tag?`<span class="s-tag">${s.tag}</span>`:''}
-      </div>`).join('')
-    : '<div style="font-family:var(--mono);font-size:12px;color:var(--muted);padding:8px 0;">今日の予定はありません</div>';
-
-  const done=todos.filter(t=>t.done).length;
-  document.getElementById('progressFill').style.width=todos.length?(done/todos.length*100)+'%':'0%';
-  document.getElementById('progressLabel').textContent=`${done} / ${todos.length}`;
-  const pending=todos.filter(t=>!t.done).slice(0,3);
-  document.getElementById('homeTodo').innerHTML = pending.map((t,i)=>{
-    const realIdx=todos.indexOf(t);
-    return `<div class="todo-item" onclick="toggleTodo(${realIdx});renderAll()">
-      <div class="todo-check"></div>
-      <span class="todo-text">${t.text}</span>
-    </div>`;
-  }).join('');
-}
-
-function renderSchedule() {
-  const now=new Date(); const nowMin=now.getHours()*60+now.getMinutes();
-  const sorted=[...schedule].sort((a,b)=>a.time.localeCompare(b.time));
-  document.getElementById('scheduleList').innerHTML = sorted.length
-    ? sorted.map((s,i)=>{
-        const[sh,sm]=s.time.split(':').map(Number); const soon=(sh*60+sm)>=nowMin&&(sh*60+sm)-nowMin<60;
-        return `<div class="schedule-item">
-          <span class="s-time">${s.time}</span>
-          <span class="s-dot${soon?' soon':''}"></span>
-          <span class="s-title">${s.title}</span>
-          ${s.tag?`<span class="s-tag">${s.tag}</span>`:''}
-          <button class="del-btn" onclick="delSchedule(${i})">×</button>
-        </div>`;
-      }).join('')
-    : '<div style="font-family:var(--mono);font-size:12px;color:var(--muted);padding:12px 0;">予定がありません</div>';
-}
-
-function renderTodos() {
-  document.getElementById('todoList').innerHTML = todos.length
-    ? todos.map((t,i)=>`<div class="todo-item${t.done?' done':''}" onclick="toggleTodo(${i})">
-        <div class="todo-check"></div>
-        <span class="todo-text">${t.text}</span>
-        <button class="del-btn" onclick="event.stopPropagation();delTodo(${i})">×</button>
-      </div>`).join('')
-    : '<div style="font-family:var(--mono);font-size:12px;color:var(--muted);padding:12px 0;">タスクがありません</div>';
-}
-
-// ── Schedule ──
-function addSchedule() {
-  const time=document.getElementById('newTime').value||'00:00';
-  const title=document.getElementById('newEvent').value.trim(); if(!title)return;
-  schedule.push({time,title,tag:''}); document.getElementById('newEvent').value='';
-  renderAll(); persist();
-}
-function delSchedule(i) {
-  const sorted=[...schedule].sort((a,b)=>a.time.localeCompare(b.time));
-  const item=sorted[i]; schedule=schedule.filter(s=>s!==item);
-  renderAll(); persist();
-}
-document.getElementById('newEvent').addEventListener('keydown',e=>{if(e.key==='Enter')addSchedule();});
-
-// ── Todo ──
-function toggleTodo(i) { todos[i].done=!todos[i].done; renderAll(); persist(); }
-function addTodo() {
-  const inp=document.getElementById('newTodo'); const text=inp.value.trim(); if(!text)return;
-  todos.push({text,done:false}); inp.value=''; renderAll(); persist();
-}
-function delTodo(i) { todos.splice(i,1); renderAll(); persist(); }
-document.getElementById('newTodo').addEventListener('keydown',e=>{if(e.key==='Enter')addTodo();});
-
-// ── Settings ──
-function updateSettingsUI() {
-  document.getElementById('gistIdDisplay').textContent = GIST_ID || '未設定';
-  document.getElementById('syncDesc').textContent = TOKEN
-    ? '接続中です。トークンを変更する場合は再入力してください。'
-    : 'トークンを設定するとPCとデータが同期されます。';
-}
-async function saveToken() {
-  const t=document.getElementById('tokenInput').value.trim(); if(!t)return;
-  TOKEN=t; localStorage.setItem('gh_token',t);
-  setMsg('接続中...');
-  try {
-    await ensureGist(); await gistPull();
-    setMsg('接続しました。'); renderAll();
-    setSyncDot('s','ok'); setSyncDot('t','ok');
-  } catch { setMsg('接続失敗。トークンを確認してください。'); TOKEN=''; localStorage.removeItem('gh_token'); }
-}
-function clearToken() {
-  TOKEN=''; GIST_ID='';
-  localStorage.removeItem('gh_token'); localStorage.removeItem('gist_id');
-  document.getElementById('tokenInput').value='';
-  setMsg('同期を解除しました。');
-  setSyncDot('s','off'); setSyncDot('t','off');
-  updateSettingsUI();
-}
-function resetData() {
-  if (!confirm('全データをリセットしますか？')) return;
-  schedule=[...DEF_SCHEDULE]; todos=[...DEF_TODOS];
-  localStorage.removeItem('schedule'); localStorage.removeItem('todos');
-  renderAll();
-}
-function saveAnthropicKey() {
-  const k = document.getElementById('anthropicKeyInput').value.trim();
-  if (!k) return;
-  ANTHROPIC_KEY = k;
-  localStorage.setItem('anthropic_key', k);
-  document.getElementById('anthropicKeyMsg').textContent = '保存しました。ニュースページで英語記事が翻訳されます。';
-  document.getElementById('anthropicKeyInput').value = '';
-}
-function clearAnthropicKey() {
-  ANTHROPIC_KEY = '';
-  localStorage.removeItem('anthropic_key');
-  document.getElementById('anthropicKeyInput').value = '';
-  document.getElementById('anthropicKeyMsg').textContent = '削除しました。';
-}
-function setMsg(t) { document.getElementById('tokenMsg').textContent=t; }
-
-// ── News via RSS（日本語メディアのみ）──
+// ── News RSS Config ──
 const RSS_FEEDS = [
-  { id:'gigazine', name:'GIGAZINE',       url:'https://gigazine.net/news/rss_2.0/',                    emoji:'📰' },
-  { id:'nikkei',  name:'日経クロステック', url:'https://xtech.nikkei.com/rss/xtech-it.rdf',             emoji:'📊' },
-  { id:'ascii',   name:'ASCII.jp',        url:'https://ascii.jp/rss.xml',                              emoji:'💾' },
-  { id:'itmedia', name:'ITmedia',         url:'https://rss.itmedia.co.jp/rss/2.0/news_bursts.xml',     emoji:'💻' },
+  { cat:'NW', name:'Cisco', url:'https://newsroom.cisco.com/c/r/newsroom/en/us/rss/news-all.xml', emoji:'🌐' },
+  { cat:'NW', name:'Yamaha', url:'https://network.yamaha.com/news.rss', emoji:'🎹' },
+  { cat:'NW', name:'Fortinet', url:'https://www.fortinet.com/rss/blog.xml', emoji:'🛡️' },
+  { cat:'NW', name:'HPE', url:'https://www.hpe.com/us/en/newsroom/rss.xml', emoji:'🏢' },
+  { cat:'Cloud', name:'AWS What\'s New', url:'https://aws.amazon.com/about-aws/whats-new/recent/feed/', emoji:'☁️' },
+  { cat:'Cloud', name:'Google Cloud', url:'https://cloud.google.com/blog/rss/', emoji:'🔍' },
+  { cat:'Cloud', name:'OCI', url:'https://www.oracle.com/news/rss/index.xml', emoji:'🔴' },
+  { cat:'Cloud', name:'ITmedia Cloud', url:'https://rss.itmedia.co.jp/rss/2.0/cloud_user.xml', emoji:'📊' },
+  { cat:'Dev', name:'Publickey', url:'https://www.publickey1.jp/atom.xml', emoji:'🔑' },
+  { cat:'Dev', name:'HashiCorp', url:'https://www.hashicorp.com/blog/feed.xml', emoji:'🏗️' },
+  { cat:'Dev', name:'Zenn Terraform', url:'https://zenn.dev/topics/terraform/feed', emoji:'📝' }
 ];
 
-// rss2jsonとAllOriginsの2つを用意して、片方がダメでももう片方で取得する
+let allNews = [];
+let currentFilter = 'all';
+
+// ── RSS Fetch (AllOriginsのフォールバックを追加して修正) ──
 async function fetchFeed(feed) {
   const urls = [
-    `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(feed.url)}&count=8`,
-    `https://api.allorigins.win/get?url=${encodeURIComponent(feed.url)}`,
+    `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(feed.url)}&count=5`,
+    `https://api.allorigins.win/get?url=${encodeURIComponent(feed.url)}`
   ];
 
-  // まずrss2jsonを試す
+  // 1. まず rss2json を試す
   try {
     const r = await fetch(urls[0], { signal: AbortSignal.timeout(8000) });
     const d = await r.json();
-    if (d.status === 'ok' && d.items?.length) {
+    if (d.status === 'ok' && d.items) {
       return d.items.map(item => ({
-        id: feed.id, source: feed.name, emoji: feed.emoji,
-        title: item.title?.replace(/<[^>]+>/g,'').trim(),
-        url: item.link || item.guid,
-        time: item.pubDate,
-        thumb: item.thumbnail || null,
+        category: feed.cat, source: feed.name, emoji: feed.emoji,
+        title: item.title, url: item.link, time: item.pubDate
       }));
     }
-  } catch {}
+  } catch (e) {}
 
-  // フォールバック：AllOriginsでRXMLを自前パース
+  // 2. 失敗したら AllOrigins で生のXMLを取得してパース（フォールバック）
   try {
     const r = await fetch(urls[1], { signal: AbortSignal.timeout(8000) });
     const d = await r.json();
     const parser = new DOMParser();
     const xml = parser.parseFromString(d.contents, 'text/xml');
-    const items = [...xml.querySelectorAll('item')];
-    return items.slice(0,8).map(item => ({
-      id: feed.id, source: feed.name, emoji: feed.emoji,
-      title: item.querySelector('title')?.textContent?.trim(),
+    const items = [...xml.querySelectorAll('item')].slice(0, 5); // 5件だけ取得
+    return items.map(item => ({
+      category: feed.cat, source: feed.name, emoji: feed.emoji,
+      title: item.querySelector('title')?.textContent?.trim() || 'タイトルなし',
       url: item.querySelector('link')?.textContent?.trim() || item.querySelector('guid')?.textContent?.trim(),
-      time: item.querySelector('pubDate')?.textContent?.trim(),
-      thumb: null,
+      time: item.querySelector('pubDate')?.textContent?.trim()
     }));
-  } catch {}
-
+  } catch (e) {
+    console.error("Feed error:", feed.name);
+  }
   return [];
 }
 
-let allNews = [];
-let currentFilter = 'all';
-
-function timeAgo(dateStr) {
-  if (!dateStr) return '';
-  const diff = (Date.now() - new Date(dateStr)) / 1000 / 60;
-  if (isNaN(diff) || diff < 0) return '';
-  if (diff < 60) return `${Math.floor(diff)}分前`;
-  if (diff < 60*24) return `${Math.floor(diff/60)}時間前`;
-  return `${Math.floor(diff/60/24)}日前`;
-}
-
 async function fetchNews() {
-  document.getElementById('newsList').innerHTML = '<div class="news-msg">読み込み中...</div>';
+  const container = document.getElementById('newsList');
+  container.innerHTML = '<div class="news-msg" style="text-align:center; padding:40px; color:var(--muted); font-family:var(--mono); font-size:12px;">Fetching latest tech news...</div>';
+  
   allNews = [];
-  const results = await Promise.allSettled(RSS_FEEDS.map(feed => fetchFeed(feed)));
-  results.forEach(r => { if (r.status === 'fulfilled') allNews.push(...r.value); });
+  const results = await Promise.allSettled(RSS_FEEDS.map(f => fetchFeed(f)));
+  results.forEach(r => { if(r.status === 'fulfilled') allNews.push(...r.value); });
+
+  // リンクとタイトルがない不正なデータを除外して、日付順にソート
   allNews = allNews.filter(n => n.title && n.url);
-  allNews.sort((a,b) => new Date(b.time||0) - new Date(a.time||0));
+  allNews.sort((a,b) => new Date(b.time || 0) - new Date(a.time || 0));
   renderNews();
 }
 
-function filterNews(id, btn) {
-  currentFilter = id;
+function filterNews(cat, btn) {
+  currentFilter = cat;
   document.querySelectorAll('.news-filter-btn').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
   renderNews();
 }
 
 function renderNews() {
-  const list = currentFilter === 'all' ? allNews : allNews.filter(n => n.id === currentFilter);
-  if (!list.length) {
-    document.getElementById('newsList').innerHTML =
-      '<div class="news-msg">取得できませんでした。↻ 更新を試してください。</div>';
+  const list = currentFilter === 'all' ? allNews : allNews.filter(n => n.category === currentFilter);
+  const container = document.getElementById('newsList');
+  
+  if (list.length === 0) {
+    container.innerHTML = '<div class="news-msg" style="text-align:center; padding:40px; color:var(--muted); font-family:var(--mono); font-size:12px;">No articles found. Try reloading.</div>';
     return;
   }
-  document.getElementById('newsList').innerHTML = list.map(n => `
-    <a class="news-item" href="${n.url}" target="_blank" rel="noopener">
+
+  container.innerHTML = list.map(n => `
+    <a class="news-item" href="${n.url}" target="_blank">
       <div class="news-item-body">
         <div class="news-meta">
           <span class="news-tag">${n.source}</span>
           <span>${timeAgo(n.time)}</span>
         </div>
-        <div class="news-title">${n.title||''}</div>
+        <div class="news-title">${n.title}</div>
       </div>
-      ${n.thumb
-        ? `<img class="news-thumb" src="${n.thumb}" alt="" loading="lazy" onerror="this.style.display='none'">`
-        : `<div class="news-thumb-placeholder">${n.emoji}</div>`}
-    </a>`).join('');
+      <div class="news-thumb-placeholder">${n.emoji}</div>
+    </a>
+  `).join('');
 }
 
-// ── Init ──
-(async()=>{
-  if(TOKEN&&GIST_ID){
-    setSyncDot('s','ing'); setSyncDot('t','ing');
-    try{await gistPull();setSyncDot('s','ok');setSyncDot('t','ok');}
-    catch{setSyncDot('s','err');setSyncDot('t','err');}
-  } else if(TOKEN){
-    try{await ensureGist();await gistPull();setSyncDot('s','ok');setSyncDot('t','ok');}catch{}
-  }
-  renderAll();
-})();
+function timeAgo(dateStr) {
+  if (!dateStr) return '';
+  const diff = Math.floor((new Date() - new Date(dateStr)) / 1000 / 60);
+  if (isNaN(diff) || diff < 0) return 'Just now';
+  if (diff < 60) return diff + 'm ago';
+  if (diff < 1440) return Math.floor(diff/60) + 'h ago';
+  return Math.floor(diff/1440) + 'd ago';
+}
+
+// 初期化
+window.onload = () => { tick(); fetchNews(); };
 </script>
 </body>
 </html>
