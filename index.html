@@ -546,53 +546,45 @@ function setMsg(t) { document.getElementById('tokenMsg').textContent=t; }
 
 // ── News via RSS（日本語メディアのみ）──
 const RSS_FEEDS = [
-  { id:'nw', cat:'NW', name:'Cisco', url:'https://newsroom.cisco.com/c/r/newsroom/en/us/rss/news-all.xml', emoji:'🌐' },
-  { id:'nw', cat:'NW', name:'Yamaha', url:'https://network.yamaha.com/news.rss', emoji:'🎹' },
-  { id:'nw', cat:'NW', name:'Fortinet', url:'https://www.fortinet.com/rss/blog.xml', emoji:'🛡️' },
+  { id:'nw', cat:'NW', name:'Publickey', url:'https://www.publickey1.jp/atom.xml', emoji:'🔑' },
   { id:'cloud', cat:'Cloud', name:'AWS What\'s New', url:'https://aws.amazon.com/about-aws/whats-new/recent/feed/', emoji:'☁️' },
-  { id:'cloud', cat:'Cloud', name:'Google Cloud', url:'https://cloud.google.com/blog/rss/', emoji:'🔍' },
-  { id:'cloud', cat:'Cloud', name:'OCI', url:'https://www.oracle.com/news/rss/index.xml', emoji:'🔴' },
-  { id:'dev', cat:'Dev', name:'Publickey', url:'https://www.publickey1.jp/atom.xml', emoji:'🔑' },
-  { id:'dev', cat:'Dev', name:'HashiCorp', url:'https://www.hashicorp.com/blog/feed.xml', emoji:'🏗️' },
   { id:'dev', cat:'Dev', name:'Zenn Terraform', url:'https://zenn.dev/topics/terraform/feed', emoji:'📝' }
 ];
 
-// rss2jsonとAllOriginsの2つを用意して、片方がダメでももう片方で取得する
+// AllOrigins経由でRSS/Atomの両方を取得する
 async function fetchFeed(feed) {
-  const urls = [
-    `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(feed.url)}&count=8`,
-    `https://api.allorigins.win/get?url=${encodeURIComponent(feed.url)}`,
-  ];
-
-  // まずrss2jsonを試す
   try {
-    const r = await fetch(urls[0], { signal: AbortSignal.timeout(8000) });
-    const d = await r.json();
-    if (d.status === 'ok' && d.items?.length) {
-      return d.items.map(item => ({
-        id: feed.id, source: feed.name, emoji: feed.emoji,
-        title: item.title?.replace(/<[^>]+>/g,'').trim(),
-        url: item.link || item.guid,
-        time: item.pubDate,
-        thumb: item.thumbnail || null,
-      }));
-    }
-  } catch {}
-
-  // フォールバック：AllOriginsでRXMLを自前パース
-  try {
-    const r = await fetch(urls[1], { signal: AbortSignal.timeout(8000) });
+    const url = `https://api.allorigins.win/get?url=${encodeURIComponent(feed.url)}`;
+    const r = await fetch(url, { signal: AbortSignal.timeout(8000) });
     const d = await r.json();
     const parser = new DOMParser();
     const xml = parser.parseFromString(d.contents, 'text/xml');
-    const items = [...xml.querySelectorAll('item')];
-    return items.slice(0,8).map(item => ({
-      id: feed.id, source: feed.name, emoji: feed.emoji,
+    const rssItems = [...xml.querySelectorAll('item')].map(item => ({
+      id: feed.id,
+      source: feed.name,
+      emoji: feed.emoji,
       title: item.querySelector('title')?.textContent?.trim(),
       url: item.querySelector('link')?.textContent?.trim() || item.querySelector('guid')?.textContent?.trim(),
       time: item.querySelector('pubDate')?.textContent?.trim(),
       thumb: null,
     }));
+    if (rssItems.length) return rssItems.slice(0, 8);
+
+    const atomEntries = [...xml.querySelectorAll('entry')].map(entry => ({
+      id: feed.id,
+      source: feed.name,
+      emoji: feed.emoji,
+      title: entry.querySelector('title')?.textContent?.trim(),
+      url:
+        entry.querySelector('link[rel="alternate"]')?.getAttribute('href') ||
+        entry.querySelector('link')?.getAttribute('href') ||
+        entry.querySelector('id')?.textContent?.trim(),
+      time:
+        entry.querySelector('published')?.textContent?.trim() ||
+        entry.querySelector('updated')?.textContent?.trim(),
+      thumb: null,
+    }));
+    return atomEntries.slice(0, 8);
   } catch {}
 
   return [];
