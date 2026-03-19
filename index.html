@@ -242,10 +242,9 @@
   </div>
   <div class="news-filter">
     <button class="news-filter-btn active" onclick="filterNews('all',this)">すべて</button>
-    <button class="news-filter-btn" onclick="filterNews('gigazine',this)">GIGAZINE</button>
-    <button class="news-filter-btn" onclick="filterNews('nikkei',this)">日経</button>
-    <button class="news-filter-btn" onclick="filterNews('ascii',this)">ASCII</button>
-    <button class="news-filter-btn" onclick="filterNews('itmedia',this)">ITmedia</button>
+    <button class="news-filter-btn" onclick="filterNews('nw',this)">Network</button>
+    <button class="news-filter-btn" onclick="filterNews('cloud',this)">Cloud</button>
+    <button class="news-filter-btn" onclick="filterNews('dev',this)">Dev</button>
   </div>
   <button class="news-reload" onclick="fetchNews()">↻ 更新</button>
   <div id="newsList"><div class="news-msg">読み込み中...</div></div>
@@ -547,15 +546,15 @@ function setMsg(t) { document.getElementById('tokenMsg').textContent=t; }
 
 // ── News via RSS（日本語メディアのみ）──
 const RSS_FEEDS = [
-  { cat:'NW', name:'Cisco', url:'https://newsroom.cisco.com/c/r/newsroom/en/us/rss/news-all.xml', emoji:'🌐' },
-  { cat:'NW', name:'Yamaha', url:'https://network.yamaha.com/news.rss', emoji:'🎹' },
-  { cat:'NW', name:'Fortinet', url:'https://www.fortinet.com/rss/blog.xml', emoji:'🛡️' },
-  { cat:'Cloud', name:'AWS What\'s New', url:'https://aws.amazon.com/about-aws/whats-new/recent/feed/', emoji:'☁️' },
-  { cat:'Cloud', name:'Google Cloud', url:'https://cloud.google.com/blog/rss/', emoji:'🔍' },
-  { cat:'Cloud', name:'OCI', url:'https://www.oracle.com/news/rss/index.xml', emoji:'🔴' },
-  { cat:'Dev', name:'Publickey', url:'https://www.publickey1.jp/atom.xml', emoji:'🔑' },
-  { cat:'Dev', name:'HashiCorp', url:'https://www.hashicorp.com/blog/feed.xml', emoji:'🏗️' },
-  { cat:'Dev', name:'Zenn Terraform', url:'https://zenn.dev/topics/terraform/feed', emoji:'📝' }
+  { id:'nw', cat:'NW', name:'Cisco', url:'https://newsroom.cisco.com/c/r/newsroom/en/us/rss/news-all.xml', emoji:'🌐' },
+  { id:'nw', cat:'NW', name:'Yamaha', url:'https://network.yamaha.com/news.rss', emoji:'🎹' },
+  { id:'nw', cat:'NW', name:'Fortinet', url:'https://www.fortinet.com/rss/blog.xml', emoji:'🛡️' },
+  { id:'cloud', cat:'Cloud', name:'AWS What\'s New', url:'https://aws.amazon.com/about-aws/whats-new/recent/feed/', emoji:'☁️' },
+  { id:'cloud', cat:'Cloud', name:'Google Cloud', url:'https://cloud.google.com/blog/rss/', emoji:'🔍' },
+  { id:'cloud', cat:'Cloud', name:'OCI', url:'https://www.oracle.com/news/rss/index.xml', emoji:'🔴' },
+  { id:'dev', cat:'Dev', name:'Publickey', url:'https://www.publickey1.jp/atom.xml', emoji:'🔑' },
+  { id:'dev', cat:'Dev', name:'HashiCorp', url:'https://www.hashicorp.com/blog/feed.xml', emoji:'🏗️' },
+  { id:'dev', cat:'Dev', name:'Zenn Terraform', url:'https://zenn.dev/topics/terraform/feed', emoji:'📝' }
 ];
 
 // rss2jsonとAllOriginsの2つを用意して、片方がダメでももう片方で取得する
